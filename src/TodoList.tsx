@@ -1,6 +1,7 @@
 import React, {ChangeEvent, useState} from 'react';
 import {FilterValuesType, TaskType} from "./App";
 import {AddItemForm} from "./addItemForm";
+import {EditableSpan} from "./EditableSpan";
 
 type PropsTodoListType = {
     todoListID: string
@@ -11,6 +12,7 @@ type PropsTodoListType = {
     addTask: (title: string, todoListsID: string) => void
     changeTaskStatus: (taskID: string, isDone: boolean, todoListsID: string) => void
     filter: FilterValuesType
+    changeTaskTitle : (taskID: string, title: string, todoListsID: string) => void
     changeTodoListFilter: (filterValue: FilterValuesType, todoListsID: string) => void
 }
 
@@ -18,7 +20,7 @@ export const TodoList: React.FC<PropsTodoListType> = (props) => {
 
     const tasksJSX = props.tasks.map(t => {
         let taskClass = t.isDone ? 'is-done' : ""
-
+        const changeTaskTitle = (title: string) => props.changeTaskTitle(t.id, title, props.todoListID)
         const removeTask = () => props.removeTask(t.id, props.todoListID)
         const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => props.changeTaskStatus(t.id, e.currentTarget.checked, props.todoListID)
         return (
@@ -26,7 +28,8 @@ export const TodoList: React.FC<PropsTodoListType> = (props) => {
                 <input type="checkbox"
                        checked={t.isDone}
                        onChange={changeTaskStatus}
-                /> <span>{t.title}</span>
+                />
+                <EditableSpan title={t.title} changeTitle={changeTaskTitle}/>
                 <button onClick={removeTask}>x</button>
             </li>
         )
@@ -45,7 +48,7 @@ export const TodoList: React.FC<PropsTodoListType> = (props) => {
                 onClick={() => props.removeTodoList(props.todoListID)}>x
             </button>
         </h3>
-      <AddItemForm addItemForm={addTask} />
+        <AddItemForm addItemForm={addTask}/>
         <ul>
             {tasksJSX}
         </ul>
