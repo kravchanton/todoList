@@ -2,6 +2,8 @@ import React, {ChangeEvent, useState} from 'react';
 import {FilterValuesType, TaskType} from "./App";
 import {AddItemForm} from "./addItemForm";
 import {EditableSpan} from "./EditableSpan";
+import {Button, Checkbox, IconButton} from "@material-ui/core";
+import {Delete} from "@material-ui/icons";
 
 type PropsTodoListType = {
     todoListID: string
@@ -25,12 +27,12 @@ export const TodoList: React.FC<PropsTodoListType> = (props) => {
         const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => props.changeTaskStatus(t.id, e.currentTarget.checked, props.todoListID)
         return (
             <li key={t.id} className={taskClass}>
-                <input type="checkbox"
+                <Checkbox color={"primary"}
                        checked={t.isDone}
                        onChange={changeTaskStatus}
                 />
                 <EditableSpan title={t.title} changeTitle={changeTaskTitle}/>
-                <button onClick={removeTask}>x</button>
+                <IconButton onClick={removeTask}><Delete/></IconButton>
             </li>
         )
     })
@@ -44,24 +46,42 @@ export const TodoList: React.FC<PropsTodoListType> = (props) => {
 
     return <div>
         <h3> {props.title}
-            <button
-                onClick={() => props.removeTodoList(props.todoListID)}>x
-            </button>
+            <IconButton
+                onClick={() => props.removeTodoList(props.todoListID)}><Delete />
+            </IconButton>
         </h3>
         <AddItemForm addItemForm={addTask}/>
-        <ul>
+        <ul style={{listStyle: "none", padding: "0px"}}>
             {tasksJSX}
         </ul>
         <div>
-            <button className={props.filter === "all" ? 'active-filter' : ''}
+            <Button
+                size={'small'}
+                variant={props.filter === "all" ? 'contained' : 'outlined'}
+                color={'primary'}
+              /*  className={props.filter === "all" ? 'active-filter' : ''}*/
                     onClick={onCLickSetAllFilter}>All
-            </button>
-            <button className={props.filter === "active" ? 'active-filter' : ''}
+            </Button>
+            <Button
+                style={{marginLeft: "3px"}}
+                size={'small'}
+                variant={props.filter === "active" ? 'contained' : 'outlined'}
+                color={"primary"}
+/*
+                className={props.filter === "active" ? 'active-filter' : ''}
+*/
                     onClick={onCLickSetActiveFilter}>Active
-            </button>
-            <button className={props.filter === "completed" ? 'active-filter' : ''}
+            </Button>
+
+            <Button
+                style={{marginLeft: "3px"}}
+
+                size={'small'}
+                variant={props.filter === "completed" ? 'contained' : 'outlined'}
+                color={'primary'}
+                /*className={props.filter === "completed" ? 'active-filter' : ''}*/
                     onClick={onCLickSetCompletedFilter}>Completed
-            </button>
+            </Button>
         </div>
     </div>
 }
