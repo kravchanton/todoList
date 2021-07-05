@@ -16,6 +16,7 @@ type PropsTodoListType = {
     filter: FilterValuesType
     changeTaskTitle : (taskID: string, title: string, todoListsID: string) => void
     changeTodoListFilter: (filterValue: FilterValuesType, todoListsID: string) => void
+    changeTodoListTitle: (title: string, todoListsIDL: string) => void
 }
 
 export const TodoList: React.FC<PropsTodoListType> = (props) => {
@@ -43,9 +44,10 @@ export const TodoList: React.FC<PropsTodoListType> = (props) => {
     const onCLickSetAllFilter = () => props.changeTodoListFilter('all', props.todoListID)
     const onCLickSetActiveFilter = () => props.changeTodoListFilter('active', props.todoListID)
     const onCLickSetCompletedFilter = () => props.changeTodoListFilter('completed', props.todoListID)
+    const changeTodoListTitle = (title: string) => props.changeTodoListTitle(title, props.todoListID)
 
     return <div>
-        <h3> {props.title}
+        <h3> <EditableSpan title={props.title} changeTitle={changeTodoListTitle}/>
             <IconButton
                 onClick={() => props.removeTodoList(props.todoListID)}><Delete />
             </IconButton>
