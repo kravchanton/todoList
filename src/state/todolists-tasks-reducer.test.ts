@@ -2,10 +2,16 @@ import {TasksStateType, TodoListType} from "../App";
 import {AddTodoListAC, todolistsReducer} from "./todolists-reducer";
 import {tasksReducer} from "./tasks-reducer";
 
+let  startTasksState: TasksStateType = {};
+let  startTodolistsState: Array<TodoListType> = [];
+
+beforeEach(() => {
+    startTasksState = {};
+    startTodolistsState = []
+})
 
 test('ids should be equals', () => {
-    const startTasksState: TasksStateType = {};
-    const startTodolistsState: Array<TodoListType> = [];
+
 
     const action = AddTodoListAC("new todolist");
 
