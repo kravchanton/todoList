@@ -5,7 +5,6 @@ import {AddBox} from "@material-ui/icons";
 export type AddItemFormType = {
     addItemForm: (title: string) => void
 }
-
 export function AddItemForm(props: AddItemFormType) {
     const [title, setTitle] = useState<string>("")
     const [error, setError] = useState<boolean>(false)
@@ -29,7 +28,7 @@ export function AddItemForm(props: AddItemFormType) {
         }
     }
     let errorMessage = error ? <div style={{color: "red"}}>Title is requires!</div> : null
-
+    console.log("Add item form")
     return (
         <div>
             <TextField variant={"outlined"}
