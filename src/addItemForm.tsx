@@ -5,7 +5,7 @@ import {AddBox} from "@material-ui/icons";
 export type AddItemFormType = {
     addItemForm: (title: string) => void
 }
-export function AddItemForm(props: AddItemFormType) {
+export const AddItemForm = React.memo((props: AddItemFormType) => {
     const [title, setTitle] = useState<string>("")
     const [error, setError] = useState<boolean>(false)
 
@@ -23,12 +23,14 @@ export function AddItemForm(props: AddItemFormType) {
         setError(false)
     }
     const onKeyPressAddItem = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if(error !== false) {
+            setError(false)
+        }
         if (e.key === "Enter") {
             onClickAddItem()
         }
     }
     let errorMessage = error ? <div style={{color: "red"}}>Title is requires!</div> : null
-    console.log("Add item form")
     return (
         <div>
             <TextField variant={"outlined"}
@@ -44,4 +46,4 @@ export function AddItemForm(props: AddItemFormType) {
                 onClick={onClickAddItem}><AddBox /></IconButton>
             {errorMessage}
         </div>)
-}
+})

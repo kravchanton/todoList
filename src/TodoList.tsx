@@ -1,9 +1,11 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, useCallback, useState} from 'react';
 import {FilterValuesType, TaskType} from "./App";
 import {AddItemForm} from "./addItemForm";
 import {EditableSpan} from "./EditableSpan";
 import {Button, Checkbox, IconButton} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
+import {TodoListType} from "./AppWithRedux";
+import {Task} from "./task";
 
 type PropsTodoListType = {
     todoListID: string
@@ -19,32 +21,42 @@ type PropsTodoListType = {
     changeTodoListTitle: (title: string, todoListsIDL: string) => void
 }
 
-export const TodoList: React.FC<PropsTodoListType> = (props) => {
+export const TodoList: React.FC<PropsTodoListType> = React.memo((props) => {
 
-    const tasksJSX = props.tasks.map(t => {
-        let taskClass = t.isDone ? 'is-done' : ""
-        const changeTaskTitle = (title: string) => props.changeTaskTitle(t.id, title, props.todoListID)
-        const removeTask = () => props.removeTask(t.id, props.todoListID)
-        const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => props.changeTaskStatus(t.id, e.currentTarget.checked, props.todoListID)
-        return (
-            <li key={t.id} className={taskClass}>
-                <Checkbox color={"primary"}
-                       checked={t.isDone}
-                       onChange={changeTaskStatus}
-                />
-                <EditableSpan title={t.title} changeTitle={changeTaskTitle}/>
-                <IconButton onClick={removeTask}><Delete/></IconButton>
-            </li>
-        )
-    })
-    const addTask = (title: string) => {
-        props.addTask(title, props.todoListID)
+
+    const getFilteredTasks = () => {
+        switch (props.filter) {
+            case "active":
+                return props.tasks.filter(t => !t.isDone)
+            case "completed":
+                return props.tasks.filter(t => t.isDone)
+            default:
+                return props.tasks
+        }
     }
 
-    const onCLickSetAllFilter = () => props.changeTodoListFilter('all', props.todoListID)
-    const onCLickSetActiveFilter = () => props.changeTodoListFilter('active', props.todoListID)
-    const onCLickSetCompletedFilter = () => props.changeTodoListFilter('completed', props.todoListID)
+    const changeTaskTitle = useCallback((title: string, taskID: string) => props.changeTaskTitle(taskID, title, props.todoListID),[props.todoListID, props.changeTaskTitle])
+    const removeTask = useCallback((taskID: string) => props.removeTask(taskID, props.todoListID),[props.todoListID, props.removeTask])
+    const changeTaskStatus = useCallback((taskID: string, newIdDoneValue: boolean) => props.changeTaskStatus(taskID, newIdDoneValue, props.todoListID),[props.todoListID, props.changeTaskStatus])
+    const tasks = getFilteredTasks()
+    const tasksJSX = tasks.map(t => {
+
+        return <Task key={t.id}
+                     changeTaskStatus={changeTaskStatus}
+                     removeTask={removeTask}
+                     changeTaskTitle={changeTaskTitle}
+                     task={t} />
+    })
+    const addTask = useCallback((title: string) => {
+        props.addTask(title, props.todoListID)
+    },[props.addTask, props.todoListID])
+
+    const onCLickSetAllFilter = useCallback(() => props.changeTodoListFilter('all', props.todoListID),[props.todoListID, props.changeTodoListFilter])
+    const onCLickSetActiveFilter = useCallback(() => props.changeTodoListFilter('active', props.todoListID),[props.todoListID, props.changeTodoListFilter])
+    const onCLickSetCompletedFilter = useCallback(() => props.changeTodoListFilter('completed', props.todoListID),[props.todoListID, props.changeTodoListFilter])
     const changeTodoListTitle = (title: string) => props.changeTodoListTitle(title, props.todoListID)
+
+
 
     return <div>
         <h3> <EditableSpan title={props.title} changeTitle={changeTodoListTitle}/>
@@ -86,6 +98,6 @@ export const TodoList: React.FC<PropsTodoListType> = (props) => {
             </Button>
         </div>
     </div>
-}
+})
 
-export default TodoList;
+export default TodoList
