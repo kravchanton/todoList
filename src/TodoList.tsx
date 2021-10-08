@@ -54,7 +54,7 @@ export const TodoList: React.FC<PropsTodoListType> = React.memo((props) => {
     const onCLickSetAllFilter = useCallback(() => props.changeTodoListFilter('all', props.todoListID),[props.todoListID, props.changeTodoListFilter])
     const onCLickSetActiveFilter = useCallback(() => props.changeTodoListFilter('active', props.todoListID),[props.todoListID, props.changeTodoListFilter])
     const onCLickSetCompletedFilter = useCallback(() => props.changeTodoListFilter('completed', props.todoListID),[props.todoListID, props.changeTodoListFilter])
-    const changeTodoListTitle = (title: string) => props.changeTodoListTitle(title, props.todoListID)
+    const changeTodoListTitle = useCallback((title: string) => props.changeTodoListTitle(title, props.todoListID),[props.changeTodoListTitle, props.todoListID])
 
 
 
