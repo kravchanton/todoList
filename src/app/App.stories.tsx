@@ -1,13 +1,12 @@
 import React from 'react'
 import {action} from '@storybook/addon-actions'
 import App from './App'
-import {BrowserRouterDecorator, ReduxStoreProviderDecorator} from '../stories/decorators/ReduxStoreProviderDecorator'
-import StoryRouter from 'storybook-react-router';
+import {ReduxStoreProviderDecorator} from '../stories/decorators/ReduxStoreProviderDecorator'
 
 export default {
     title: 'App Stories',
     component: App,
-    decorators: [ReduxStoreProviderDecorator, BrowserRouterDecorator]
+    decorators: [ReduxStoreProviderDecorator]
 }
 
 export const AppBaseExample = (props: any) => {
